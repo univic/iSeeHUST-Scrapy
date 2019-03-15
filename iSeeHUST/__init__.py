@@ -1,0 +1,1 @@
+from .iSeeHUST import app

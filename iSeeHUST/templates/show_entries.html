@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block body %}
+    {#
+    <div>
+        {% for status_key in item_tags['server_status'] %}
+        <span>{{status_key}}:{{ item_tags['server_status'][status_key] }}</span>
+        {% endfor %}
+    </div>
+    #}
+    {% for date_key in entries | sort(reverse=True) %}
+        <h2>{{ date_key }}</h2>
+        <ul>
+        {% for item in entries[date_key] %}
+            <li>
+                <span>[{{ item["serial_id"] }}]</span>
+                {% for tag in item["tags"] %}
+                    <span>[{{ tag }}]</span>
+                {% endfor %}
+                <a href="{{ item["href"] }}">{{item["title"]}}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}
