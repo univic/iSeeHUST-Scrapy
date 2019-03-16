@@ -89,7 +89,6 @@ class TextReplyDispatch(object):
         return return_str
 
 
-
 if __name__ == "__main__":
     list = [30, 88, 29, 28]
     for id in list:
