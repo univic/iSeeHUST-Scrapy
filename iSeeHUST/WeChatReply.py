@@ -5,10 +5,11 @@
 import re
 import pymongo
 import logging
+import datetime
 
 
 def get_logger():
-    logger = logging.getLogger('iSeeHUST.WeChatReply')
+    logger = logging.getLogger(__name__)
     return logger
 
 
@@ -17,30 +18,42 @@ sLogger = get_logger()
 
 class TextReplyDispatch(object):
     def __init__(self, content):
-        self.flag_must_reply = False
         self.content = content
+
+        # 关键词和对应的处理方法
+        self.keyword_dict = {
+            "新消息": self.get_recent_news_item
+        }
+
+        db_client = pymongo.MongoClient()
+        active_db = db_client['iSeeHUST']
+        self.rec_col = active_db['record_items']
 
     def reply_dispatch(self):
         return_result = self.pattern_recog(self.content)
-        return return_result, self.flag_must_reply
+        return return_result
 
     def pattern_recog(self, content):
-        return_str = None
 
-        # 模式识别-传送门
-        p1 = re.compile(r'^[0-9]{2,4}$')  # 传送门数字pattern
-        match = re.match(p1, str(content))
+        # 进行传送门的模式识别
+        p = re.compile(r'^[0-9]{2,4}$')  # 传送门数字pattern
+        match = re.match(p, str(content))
         if match:
-            sLogger.info("WARP GATE RX: %s" % content)
-            self.flag_must_reply = True
+            sLogger.info(f"WARP GATE RX: {content}")
             return_str = self.warp_gate_handle(content)
+
+        # 如不符合，检查是否为keyword_dict中已有的关键词，并调用对应方法
+        elif content in self.keyword_dict:
+            sLogger.info(f"KEYWORD RX: {content}")
+            return_str = self.keyword_dict[content]()
 
         else:
             sLogger.info("UNMATCHED CONTENT", content)
             return_str = ""
         return return_str
 
-    def warp_gate_handle(self, entry_id):
+    @staticmethod
+    def warp_gate_handle(entry_id):
 
         # 连接数据库
         db_client = pymongo.MongoClient()
@@ -62,6 +75,19 @@ class TextReplyDispatch(object):
             return_str = u'传送门不存在'
 
         return return_str
+
+    def get_recent_news_item(self):
+        query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=1)
+        query_date_limiter.replace(hour=0, minute=0, second=0)
+        r = self.rec_col.find({"item_date": {"$gt": query_date_limiter}})
+        return_str = ""
+        if r.count() == 0:
+            return_str = "今日暂无新消息"
+        else:
+            for item in r:
+                return_str += f'[{item["serial_id"]}]<a href={item["href"]}>{item["title"]}</a>\n'
+        return return_str
+
 
 
 if __name__ == "__main__":

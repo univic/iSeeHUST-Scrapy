@@ -4,7 +4,7 @@
 
 import time
 import xml.etree.ElementTree as et
-import WeChatReply
+import iSeeHUST.WeChatReply as WeChatReply
 import logging
 
 
@@ -99,7 +99,6 @@ class MsgHandler(object):
         self.time = int(time.time())   # 消息时间戳
 
     def text_handle(self, user='', master='', time='', content=''):
-        flag_must_reply = False
         template = """
        <xml>
              <ToUserName><![CDATA[{}]]></ToUserName>
@@ -109,22 +108,17 @@ class MsgHandler(object):
              <Content><![CDATA[{}]]></Content>
        </xml>        
         """
-        result = None
+
         msg_content = self.msg.content.strip()  # 去除前后空格
-        Text_Reply = WeChatReply.TextReplyDispatch(msg_content)  # 实例化消息回复对象，传消息字符串值，决定回复内容
-        response, flag_must_reply = Text_Reply.reply_dispatch()  # 获得返回的消息
+        reply_text = WeChatReply.TextReplyDispatch(msg_content)  # 实例化消息回复对象，传消息字符串值，决定回复内容
+        response = reply_text.reply_dispatch()  # 获得返回的消息
         if response == "":
-            if flag_must_reply:  # 如为必须回复的内容，但返回None，则提示后台错误
-                response = "Ooops, 后台暂时无法处理你的请求，你可以稍后再试"
-                sLogger.warning("INCONSISTENT BETWEEN TX(%s) AND RX(%s)" % msg_content, response)
-            else:
-                response = ""
-                sLogger.info("EMPTY RESULT RETURNED FOR %s" % msg_content)
+            sLogger.info(f"EMPTY RESULT RETURNED FOR {msg_content}")
         elif response is None:
             response = "Ooops, 后台暂时无法处理你的请求，你可以稍后再试"
-            sLogger.warning("INCONSISTENT BETWEEN TX(%s) AND RX(%s)" % msg_content, response)
+            sLogger.warning(f"INCONSISTENT BETWEEN TX({msg_content}) AND RX({response})")
         else:
-            sLogger.info("TX MSG FOR %s CONSTRUCTED" % msg_content)
+            sLogger.info(f"TX MSG FOR {msg_content} CONSTRUCTED")
 
         # 决定返回的内容
         if response == "":
@@ -138,7 +132,6 @@ class MsgHandler(object):
 
     def music_handle(self):
         return 'music'
-
 
     def voice_handle(self):
         return 'voice'

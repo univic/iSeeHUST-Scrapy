@@ -3,12 +3,12 @@ import os
 import time
 from flask import send_from_directory
 from flask import Flask, request, make_response
-import WebMonPara
+import iSeeHUST.WebMonPara as WebMonPara
 import logging
 from logging import handlers
 import json
 import hashlib
-# import WeChatDispatch
+import iSeeHUST.WeChatDispatch as WeChatDispatch
 import pymongo
 import datetime
 
@@ -17,8 +17,8 @@ def create_logger(log_file='app'):
     logger = logging.getLogger('iSeeHUST')
     logger.setLevel(logging.INFO)
     handler = handlers.RotatingFileHandler('tmp/' + str(log_file) + '.log', mode='a',
-                                                  maxBytes=WebMonPara.APP_CONFIG['MAX_LOG_SIZE'] * 1024 * 1024,
-                                                  backupCount=1, encoding=None,)
+                                           maxBytes=WebMonPara.APP_CONFIG['MAX_LOG_SIZE'] * 1024 * 1024,
+                                           backupCount=1, encoding=None,)
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s:%(lineno)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
@@ -82,9 +82,9 @@ def wechat():
         timestamp = data.get('timestamp', '')
         nonce = data.get('nonce', '')
         echostr = data.get('echostr', '')
-        list = [token, timestamp, nonce]
-        list.sort()
-        s = list[0] + list[1] + list[2]
+        token_list = [token, timestamp, nonce]
+        token_list.sort()
+        s = token_list[0] + token_list[1] + token_list[2]
         hascode = hashlib.sha1(s.encode('utf-8')).hexdigest()
         if signature == hascode:
             return echostr
