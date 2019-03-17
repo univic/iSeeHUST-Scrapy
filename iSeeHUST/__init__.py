@@ -1,1 +1,1 @@
-from .iSeeHUST import app
+from iSeeHUST.iSeeHUST_main import app

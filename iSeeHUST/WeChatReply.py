@@ -3,9 +3,9 @@
 # Author : univic
 
 import re
-import pymongo
 import logging
 import datetime
+from iSeeHUST import DB
 
 
 def get_logger():
@@ -24,10 +24,8 @@ class TextReplyDispatch(object):
         self.keyword_dict = {
             "新消息": self.get_recent_news_item
         }
-
-        db_client = pymongo.MongoClient()
-        active_db = db_client['iSeeHUST']
-        self.rec_col = active_db['record_items']
+        # 创建数据库连接
+        self.db = DB.DBConn()
 
     def reply_dispatch(self):
         return_result = self.pattern_recog(self.content)
@@ -37,8 +35,7 @@ class TextReplyDispatch(object):
 
         # 进行传送门的模式识别
         p = re.compile(r'^[0-9]{2,4}$')  # 传送门数字pattern
-        match = re.match(p, str(content))
-        if match:
+        if re.match(p, str(content)):
             sLogger.info(f"WARP GATE RX: {content}")
             return_str = self.warp_gate_handle(content)
 
@@ -52,16 +49,10 @@ class TextReplyDispatch(object):
             return_str = ""
         return return_str
 
-    @staticmethod
-    def warp_gate_handle(entry_id):
-
-        # 连接数据库
-        db_client = pymongo.MongoClient()
-        active_db = db_client['iSeeHUST']
-        rec_col = active_db['record_items']
+    def warp_gate_handle(self, entry_id):
 
         # 查找对应传送门编号
-        r = rec_col.find({"serial_id": entry_id})
+        r = self.db.record_items_col.find({"serial_id": entry_id})
         if r.count() > 0:
             if r.count() == 1:
                 item = r[0]
@@ -79,7 +70,7 @@ class TextReplyDispatch(object):
     def get_recent_news_item(self):
         query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=1)
         query_date_limiter.replace(hour=0, minute=0, second=0)
-        r = self.rec_col.find({"item_date": {"$gt": query_date_limiter}})
+        r = self.db.record_items_col.find({"item_date": {"$gt": query_date_limiter}})
         return_str = ""
         if r.count() == 0:
             return_str = "今日暂无新消息"
@@ -90,8 +81,8 @@ class TextReplyDispatch(object):
 
 
 if __name__ == "__main__":
-    list = [30, 88, 29, 28]
-    for id in list:
-        T = TextReplyDispatch(id)
-        a, b = T.reply_dispatch()
-        print(a, b)
+    list_a = [30, 88, 29, 28]
+    for id_a in list_a:
+        T = TextReplyDispatch(id_a)
+        a = T.reply_dispatch()
+        print(a)

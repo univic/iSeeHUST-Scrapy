@@ -9,14 +9,15 @@ from logging import handlers
 import json
 import hashlib
 import iSeeHUST.WeChatDispatch as WeChatDispatch
-import pymongo
+import iSeeHUST.DB
 import datetime
 
 
 def create_logger(log_file='app'):
-    logger = logging.getLogger('iSeeHUST')
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
-    handler = handlers.RotatingFileHandler('tmp/' + str(log_file) + '.log', mode='a',
+    log_file_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'tmp', str(log_file) + '.log')
+    handler = handlers.RotatingFileHandler(log_file_path, mode='a',
                                            maxBytes=WebMonPara.APP_CONFIG['MAX_LOG_SIZE'] * 1024 * 1024,
                                            backupCount=1, encoding=None,)
     handler.setLevel(logging.INFO)
@@ -37,7 +38,6 @@ except AttributeError as e:
     pass
 
 app = Flask(__name__)
-# app.config.from_object('WebMonPara.py')
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 
@@ -51,16 +51,14 @@ def favicon():
 def show_entries():
 
     # 连接数据库
-    db_client = pymongo.MongoClient()
-    active_db = db_client['iSeeHUST']
-    rec_col = active_db['record_items']
+    db = iSeeHUST.DB.DBConn()
 
     # 设置查询时间限制
     query_date_limiter = datetime.datetime.now() - datetime.timedelta(WebMonPara.APP_CONFIG["DEFAULT_DATE_RANGE"])
     query_date_limiter.replace(hour=0, minute=0, second=0)
 
     # 查询数据，并按日期组成新的dict
-    entries = rec_col.find({"item_date": {"$gt": query_date_limiter}})
+    entries = db.record_items_col.find({"item_date": {"$gt": query_date_limiter}})
     page_items = {}
     for item in entries:
         date_str = datetime.datetime.strftime(item["item_date"], "%Y-%m-%d")
