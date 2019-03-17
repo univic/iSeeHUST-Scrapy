@@ -56,7 +56,7 @@ def show_entries():
     rec_col = active_db['record_items']
 
     # 设置查询时间限制
-    query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=15)
+    query_date_limiter = datetime.datetime.now() - datetime.timedelta(WebMonPara.APP_CONFIG["DEFAULT_DATE_RANGE"])
     query_date_limiter.replace(hour=0, minute=0, second=0)
 
     # 查询数据，并按日期组成新的dict
