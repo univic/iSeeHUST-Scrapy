@@ -111,6 +111,7 @@ venv
 
 #sensitive config
 config_override.py
+WebMonConfig_deploy_env.py
 
 #misc
 dev

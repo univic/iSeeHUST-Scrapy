@@ -1,9 +1,12 @@
 import pymongo
 from pymongo import errors
-import iSeeHUST.WebMonPara as Para
 import logging
 import bson
-import traceback
+# import traceback
+try:
+    import iSeeHUST.WebMonConfig_deploy_env as WebMonPara
+except ImportError as e:
+    import iSeeHUST.WebMonConfig as WebMonPara
 
 
 def get_logger():
@@ -20,18 +23,18 @@ class DBConn(object):
         try:
             self.db_msg = None
             # 连接MongoDB数据库
-            self.client = pymongo.MongoClient(host=Para.DB_CONFIGS["host"],
-                                              port=Para.DB_CONFIGS["port"]
+            self.client = pymongo.MongoClient(host=WebMonPara.DB_CONFIGS["host"],
+                                              port=WebMonPara.DB_CONFIGS["port"]
                                               )
-            self.db = self.client[Para.DB_CONFIGS["database"]]
+            self.db = self.client[WebMonPara.DB_CONFIGS["database"]]
             self.record_items_col = self.db["record_items"]
 
             # 是否需要鉴权
-            if Para.DB_CONFIGS["authenticate"]:
-                self.db.authenticate(Para.DB_CONFIGS['username'], Para.DB_CONFIGS['password'])
+            if WebMonPara.DB_CONFIGS["authenticate"]:
+                self.db.authenticate(WebMonPara.DB_CONFIGS['username'], WebMonPara.DB_CONFIGS['password'])
 
             # 如数据库不存在，或counters数据集不存在，则进行初始化
-            if Para.DB_CONFIGS["database"] not in self.client.list_database_names():
+            if WebMonPara.DB_CONFIGS["database"] not in self.client.list_database_names():
                 self.db_init()
             elif "counters" not in self.db.list_collection_names():
                 self.db_init()

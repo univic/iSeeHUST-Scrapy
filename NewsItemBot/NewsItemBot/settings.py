@@ -13,6 +13,7 @@ BOT_NAME = 'NewsItemBot'
 
 SPIDER_MODULES = ['NewsItemBot.spiders']
 NEWSPIDER_MODULE = 'NewsItemBot.spiders'
+COMMANDS_MODULE = 'NewsItemBot.commands'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -90,11 +91,6 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-# Configure Mongodb settings
-MONGODB_HOST = '127.0.0.1'
-MONGODB_PORT = '27017'
-MONGODB_DBNAME = 'iSeeHUST'
-MONGODB_COL_NAME = 'record_item'
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
              'Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586'

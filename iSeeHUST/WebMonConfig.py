@@ -26,3 +26,8 @@ DB_CONFIGS = {
     'authenticate': False,
     'charset': 'utf8'
 }
+
+WECHAT_CONFIGS = {
+    'Token': 'your_token',
+    'EncodingAESKey': 'your_AES_key'
+}

@@ -3,16 +3,19 @@ import os
 import time
 from flask import send_from_directory
 from flask import Flask, request, make_response
-import iSeeHUST.WebMonPara as WebMonPara
 import logging
-from logging import handlers
+# from logging import handlers
 import json
 import hashlib
 import iSeeHUST.WeChatDispatch as WeChatDispatch
 import iSeeHUST.DB
 import datetime
+try:
+    import iSeeHUST.WebMonConfig_deploy_env as WebMonPara
+except ImportError as e:
+    import iSeeHUST.WebMonConfig as WebMonPara
 
-
+"""
 def create_logger(log_file='app'):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
@@ -28,6 +31,15 @@ def create_logger(log_file='app'):
 
 
 sLogger = create_logger('app')
+"""
+
+
+def get_logger():
+    logger = logging.getLogger(__name__)
+    return logger
+
+
+sLogger = get_logger()
 
 try:
     os.environ['TZ'] = 'Asia/Shanghai'  # 修改服务器时区为UTC+8
