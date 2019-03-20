@@ -15,31 +15,8 @@ try:
 except ImportError as e:
     import iSeeHUST.WebMonConfig as WebMonPara
 
-"""
-def create_logger(log_file='app'):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    log_file_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'tmp', str(log_file) + '.log')
-    handler = handlers.RotatingFileHandler(log_file_path, mode='a',
-                                           maxBytes=WebMonPara.APP_CONFIG['MAX_LOG_SIZE'] * 1024 * 1024,
-                                           backupCount=1, encoding=None,)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s:%(lineno)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
 
-
-sLogger = create_logger('app')
-"""
-
-
-def get_logger():
-    logger = logging.getLogger(__name__)
-    return logger
-
-
-sLogger = get_logger()
+sLogger = logging.getLogger(__name__)
 
 try:
     os.environ['TZ'] = 'Asia/Shanghai'  # 修改服务器时区为UTC+8

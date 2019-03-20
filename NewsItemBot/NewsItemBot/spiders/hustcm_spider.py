@@ -39,7 +39,7 @@ class HustcmSpider(scrapy.Spider):
             'http://cm.hust.edu.cn/zyfz/zyfz.htm',
         ]
 
-        for url in urls[:]:
+        for url in urls[:1]:
             time.sleep(1)
             yield scrapy.Request(url=url, callback=self.parse)
 

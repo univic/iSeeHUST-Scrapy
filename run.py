@@ -1,12 +1,16 @@
-import iSeeHUST.iSeeHUST_main
-from scrapy.crawler import CrawlerProcess
-from NewsItemBot.NewsItemBot.spiders import husteco_spider
+# /usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Author : univic
+
+import os
 import logging
 from logging import handlers
-import os
-from scrapy.utils.project import get_project_settings
-from NewsItemBot.NewsItemBot import settings as bot_settings
-from scrapy.settings import Settings
+import multiprocessing
+from multiprocessing import Process
+from NewsItemBot import run_crawler
+
+import iSeeHUST.iSeeHUST_main
+
 
 try:
     import iSeeHUST.WebMonConfig_deploy_env as WebMonPara
@@ -30,10 +34,35 @@ def create_logger(log_file='NAV'):
 
 sLogger = create_logger('NAV')
 
-# 运行爬虫
-os.chdir("NewsItemBot")
-process = CrawlerProcess(get_project_settings())
-process.crawl(husteco_spider.HustecoSpider)
-process.start()
 
-# iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=True, threaded=True)
+# 调用commands模块命令，运行全部爬虫
+def crawler_dispatch():
+    run_crawler.run_all_crawler()
+
+
+# 运行web服务
+def run_web_server():
+
+    iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=True, threaded=True)
+
+
+if __name__ == "__main__":
+
+
+    print("Main process running, PID ", os.getpid())
+
+    # 切换至爬虫主目录——Scrapy根据当前路径查找cfg文件
+    main_project_path = os.path.abspath(os.getcwd())
+    bot_project_path = os.path.join(main_project_path, "NewsItemBot")
+    os.chdir(bot_project_path)
+    print("Working directory changed to ", bot_project_path)
+
+    # 通过多进程方式启动爬虫服务和网页服务
+    # p1 = Process(target=run_crawler_aux)
+    p1 = Process(target=crawler_dispatch)
+    p2 = Process(target=run_web_server)
+    p1.start()
+    p2.start()
+    print(f"Subprocess NewsItemBot running, PID {p1.pid}")
+    print(f"Subprocess iSeeHUST running, PID {p2.pid}")
+

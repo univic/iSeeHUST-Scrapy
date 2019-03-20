@@ -11,9 +11,9 @@
 
 BOT_NAME = 'NewsItemBot'
 
-SPIDER_MODULES = ['NewsItemBot.spiders']
-NEWSPIDER_MODULE = 'NewsItemBot.spiders'
-COMMANDS_MODULE = 'NewsItemBot.commands'
+SPIDER_MODULES = ['NewsItemBot.NewsItemBot.spiders']
+NEWSPIDER_MODULE = 'NewsItemBot.NewsItemBot.spiders'
+COMMANDS_MODULE = 'NewsItemBot.NewsItemBot.commands'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -67,7 +67,7 @@ ROBOTSTXT_OBEY = True
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 ITEM_PIPELINES = {
-    'NewsItemBot.pipelines.NewsitembotPipeline': 300,
+    'NewsItemBot.NewsItemBot.pipelines.NewsitembotPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
