@@ -62,6 +62,7 @@ def show_entries():
 
 @app.route('/wechat', methods=['POST', 'GET'])
 def wechat():
+    # TODO 上线部署，验证后台配置
     if request.method == 'GET':  # GET方式为微信的连接测试请求
         token = '519302_n'  # 公众号后台设置的token
         data = request.args  # 获取数据的各项属性

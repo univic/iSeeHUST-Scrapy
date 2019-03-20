@@ -35,19 +35,20 @@ def create_logger(log_file='NAV'):
 sLogger = create_logger('NAV')
 
 
-# 调用commands模块命令，运行全部爬虫
+# 进行爬虫运行的时间调度
 def crawler_dispatch():
+    # TODO 进行爬虫运行的时间调度
+    # 调用commands模块命令，运行全部爬虫
     run_crawler.run_all_crawler()
 
 
 # 运行web服务
 def run_web_server():
-
+    # TODO 整合HTML模板
     iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=True, threaded=True)
 
 
 if __name__ == "__main__":
-
 
     print("Main process running, PID ", os.getpid())
 
