@@ -10,10 +10,7 @@ import hashlib
 import iSeeHUST.WeChatDispatch as WeChatDispatch
 import iSeeHUST.DB
 import datetime
-try:
-    import iSeeHUST.WebMonConfig_deploy_env as WebMonPara
-except ImportError as e:
-    import iSeeHUST.WebMonConfig as WebMonPara
+from conf.configs import CONFIGS
 
 
 sLogger = logging.getLogger(__name__)
@@ -43,7 +40,7 @@ def show_entries():
     db = iSeeHUST.DB.DBConn()
 
     # 设置查询时间限制
-    query_date_limiter = datetime.datetime.now() - datetime.timedelta(WebMonPara.APP_CONFIG["DEFAULT_DATE_RANGE"])
+    query_date_limiter = datetime.datetime.now() - datetime.timedelta(CONFIGS['APP_CONFIGS']["DEFAULT_DATE_RANGE"])
     query_date_limiter.replace(hour=0, minute=0, second=0)
 
     # 查询数据，并按日期组成新的dict

@@ -8,9 +8,9 @@ iSeeHUST-Scrapy是一个基于Scrapy、Flask和MongoDB的爬虫项目，其主�
 
 #### 环境要求
 本项目需配合MongoDB和Python3使用，建议的版本为：
->MongoDB 3.2
+>MongoDB > 3.2
 
->Python 3.6.8
+>Python > 3.6
 
 本项目推荐使用一个独立的python虚拟环境，可以在项目部署目录通过`python -m venv venv`命令创建
 
@@ -30,6 +30,14 @@ iSeeHUST-Scrapy是一个基于Scrapy、Flask和MongoDB的爬虫项目，其主�
 
 #### 新增一个爬虫
 
-#### 使用网页服务
+#### 查看爬取到的信息
 
-#### 使用SNMP
+
+##### 使用SNMP
+
+##### 使用网页服务
+
+项目基于Flask和Jinjia2提供有限的网页服务能力，如开启，则将利用Flask自带的Web服务响应Web请求。如有需要可自行搭建Web服务，Flask自带的Web服务不建议在生产环境下使用。
+
+##### 使用微信公众平台
+
