@@ -1,6 +1,7 @@
 import os
 import time
 import datetime
+from multiprocessing import Process
 from scrapy import cmdline
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
@@ -46,8 +47,9 @@ def crawler_dispatcher():
         db.db["crawler_status"].update(
             {"name": "crawler_run_time"},
             {"$set": {"value": datetime.datetime.now()}}, upsert=True)
-        cmdline.execute(["scrapy", "crawlall"])
-        print('sleeping')
+        p3 = Process(target=run_all_crawler)
+        p3.start()
+        print('sleeping, next run at', t_next_run)
         time.sleep(t_next_run_delta)
 
 

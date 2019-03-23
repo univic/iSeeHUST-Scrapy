@@ -14,7 +14,7 @@ class Command(ScrapyCommand):
 
     def run(self, args, opts):
         settings = get_project_settings()
-        spider_list = self.crawler_process.spiders.list()
+        spider_list = self.crawler_process.spider_loader.list()
 
         for name in spider_list:
             self.crawler_process.crawl(name, **opts.__dict__)
