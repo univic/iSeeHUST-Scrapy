@@ -11,6 +11,7 @@ setup(
         'flask',
         'scrapy',
         'pymongo',
-        'bson'
+        'bson',
+        'Twisted'
     ],
 )

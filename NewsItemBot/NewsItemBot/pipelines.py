@@ -8,6 +8,7 @@
 # from scrapy import exceptions
 import logging
 import bson
+from scrapy.mail import MailSender
 import iSeeHUST.DB
 
 logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ class NewsitembotPipeline(object):
                                                      new=True)
         return ret["seq"]
 
+    # 提取标签信息
     def process_tags(self):
         pass
 
@@ -46,3 +48,8 @@ class NewsitembotPipeline(object):
         return item
 
         # raise exceptions.DropItem
+
+
+class EMailPipeline(object):
+    mailer = MailSender()
+    mailer.send(to=["xyzhgwf@hotmail.com"], subject="This is a test", body="Test body")

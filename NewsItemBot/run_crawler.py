@@ -16,7 +16,7 @@ import logging
 sLogger = logging.getLogger(__name__)
 
 # 连接数据库
-db = DB.DBConn()
+dba = DB.DBConn()
 
 
 def run_all_crawler():
@@ -44,7 +44,7 @@ def crawler_dispatcher():
     t_next_run = ''
     while True:
         t_next_run_delta, t_next_run = next_run_time(t_next_run)
-        db.db["crawler_status"].update(
+        dba.db["crawler_status"].update(
             {"name": "crawler_run_time"},
             {"$set": {"value": datetime.datetime.now()}}, upsert=True)
         p3 = Process(target=run_all_crawler)
@@ -88,7 +88,7 @@ def next_run_time(t_next_run):
         t_next_run = t_next_run + datetime.timedelta(seconds=t_next_run_delta)
     print(type(t_next_run))
 
-    db.db["crawler_status"].update(
+    dba.db["crawler_status"].update(
         {
             "name": "next_run_time"},
         {"$set": {"value": t_next_run}

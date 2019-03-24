@@ -7,8 +7,7 @@ from urllib.parse import urlparse
 from urllib.parse import urlunparse
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import TakeFirst
-
-from ..items import NewsitembotItem
+from NewsItemBot.NewsItemBot.items import NewsitembotItem
 
 logger = logging.getLogger(__name__)
 

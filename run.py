@@ -11,7 +11,7 @@ import iSeeHUST.iSeeHUST_main
 from conf.configs import CONFIGS
 
 
-def create_logger(log_file='NAV'):
+def create_logger(log_file='iSeeHUST'):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     log_file_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'tmp', str(log_file) + '.log')
@@ -25,7 +25,7 @@ def create_logger(log_file='NAV'):
     return logger
 
 
-sLogger = create_logger('NAV')
+sLogger = create_logger('iSeeHUST')
 
 
 # 进行爬虫运行的时间调度
@@ -42,13 +42,13 @@ def run_web_server():
 
 if __name__ == "__main__":
 
-    print("Main process running, PID ", os.getpid())
+    sLogger.info(f"Main process running, PID {os.getpid()}")
 
     # 切换至爬虫主目录——Scrapy根据当前路径查找cfg文件
     main_project_path = os.path.abspath(os.getcwd())
     bot_project_path = os.path.join(main_project_path, "NewsItemBot")
     os.chdir(bot_project_path)
-    print("Working directory changed to ", bot_project_path)
+    sLogger.debug(f"Working directory changed to {bot_project_path}")
 
     # 通过多进程方式启动爬虫服务和网页服务
     # p1 = Process(target=run_crawler_aux)
@@ -56,5 +56,5 @@ if __name__ == "__main__":
     p2 = Process(target=run_web_server)
     p1.start()
     p2.start()
-    print(f"Subprocess NewsItemBot running, PID {p1.pid}")
-    print(f"Subprocess iSeeHUST running, PID {p2.pid}")
+    sLogger.info(f"Subprocess NewsItemBot running, PID {p1.pid}")
+    sLogger.info(f"Subprocess iSeeHUST running, PID {p2.pid}")
