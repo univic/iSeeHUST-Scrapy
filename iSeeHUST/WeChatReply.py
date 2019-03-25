@@ -68,8 +68,8 @@ class TextReplyDispatch(object):
         return return_str
 
     def get_recent_news_item(self):
-        query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=1)
-        query_date_limiter.replace(hour=0, minute=0, second=0)
+        query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=5)
+        query_date_limiter.replace(hour=0, minute=0, second=0, microsecond=0)
         r = self.db.record_items_col.find({"item_date": {"$gt": query_date_limiter}})
         return_str = ""
         if r.count() == 0:
@@ -81,7 +81,7 @@ class TextReplyDispatch(object):
 
 
 if __name__ == "__main__":
-    list_a = [30, 88, 29, 28]
+    list_a = [130, 188, 129, 128, "新消息"]
     for id_a in list_a:
         T = TextReplyDispatch(id_a)
         a = T.reply_dispatch()

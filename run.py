@@ -17,7 +17,7 @@ def create_logger(log_file='iSeeHUST'):
     log_file_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'tmp', str(log_file) + '.log')
     handler = handlers.RotatingFileHandler(log_file_path, mode='a',
                                            maxBytes=CONFIGS['APP_CONFIGS']['MAX_LOG_SIZE'] * 1024 * 1024,
-                                           backupCount=1, encoding=None, )
+                                           backupCount=1, encoding="utf-8-sig", )
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s:%(lineno)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)

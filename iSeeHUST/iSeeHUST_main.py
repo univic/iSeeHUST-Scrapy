@@ -1,15 +1,15 @@
-import flask
+
 import os
 import time
+import json
+import logging
+import datetime
+import hashlib
+import flask
 from flask import send_from_directory
 from flask import Flask, request, make_response
-import logging
-# from logging import handlers
-import json
-import hashlib
 import iSeeHUST.WeChatDispatch as WeChatDispatch
 import iSeeHUST.DB
-import datetime
 from conf.configs import CONFIGS
 
 
@@ -61,7 +61,7 @@ def show_entries():
 def wechat():
     # TODO 上线部署，验证后台配置
     if request.method == 'GET':  # GET方式为微信的连接测试请求
-        token = '519302_n'  # 公众号后台设置的token
+        token = CONFIGS["WECHAT_CONFIGS"]["Token"]  # 公众号后台设置的token
         data = request.args  # 获取数据的各项属性
         signature = data.get('signature', '')
         timestamp = data.get('timestamp', '')
