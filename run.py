@@ -37,18 +37,12 @@ def crawler_dispatcher():
 # 运行web服务
 def run_web_server():
     # TODO 整合HTML模板
-    iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=True, threaded=True)
+    iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=True, threaded=True, use_reloader=False)
 
 
 if __name__ == "__main__":
 
     sLogger.info(f"Main process running, PID {os.getpid()}")
-
-    # 切换至爬虫主目录——Scrapy根据当前路径查找cfg文件
-    main_project_path = os.path.abspath(os.getcwd())
-    bot_project_path = os.path.join(main_project_path, "NewsItemBot")
-    os.chdir(bot_project_path)
-    sLogger.debug(f"Working directory changed to {bot_project_path}")
 
     # 通过多进程方式启动爬虫服务和网页服务
     # p1 = Process(target=run_crawler_aux)

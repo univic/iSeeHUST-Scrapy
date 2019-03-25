@@ -41,14 +41,26 @@ def run_crawler_aux():
 
 # 定时运行爬虫
 def crawler_dispatcher():
+
+    # 切换至爬虫主目录——Scrapy根据当前路径查找cfg文件
+    main_project_path = os.path.abspath(os.getcwd())
+    bot_project_path = os.path.join(main_project_path, "NewsItemBot")
+    os.chdir(bot_project_path)
+    sLogger.info(f"Working directory changed to {bot_project_path}")
+
     t_next_run = ''
+
     while True:
-        t_next_run_delta, t_next_run = next_run_time(t_next_run)
         dba.db["crawler_status"].update(
             {"name": "crawler_run_time"},
             {"$set": {"value": datetime.datetime.now()}}, upsert=True)
         p3 = Process(target=run_all_crawler)
         p3.start()
+        p3.join()
+        t_next_run_delta, t_next_run = next_run_time(t_next_run)
+        dba.db["crawler_status"].update(
+            {"name": "crawler_complete_time"},
+            {"$set": {"value": datetime.datetime.now()}}, upsert=True)
         print('sleeping, next run at', t_next_run)
         time.sleep(t_next_run_delta)
 
@@ -88,10 +100,9 @@ def next_run_time(t_next_run):
         t_next_run = t_next_run + datetime.timedelta(seconds=t_next_run_delta)
     print(type(t_next_run))
 
-    dba.db["crawler_status"].update(
-        {
+    dba.db["crawler_status"].update({
             "name": "next_run_time"},
-        {"$set": {"value": t_next_run}
-        }, upsert=True)
+        {"$set": {"value": t_next_run}},
+        upsert=True)
 
     return t_next_run_delta, t_next_run
