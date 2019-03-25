@@ -37,7 +37,7 @@ def crawler_dispatcher():
 # 运行web服务
 def run_web_server():
     # TODO 整合HTML模板
-    iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=True, threaded=True, use_reloader=False)
+    iSeeHUST.iSeeHUST_main.app.run(host='0.0.0.0', port=1037, debug=False, threaded=True, use_reloader=False)
 
 
 if __name__ == "__main__":
