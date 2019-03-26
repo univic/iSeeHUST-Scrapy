@@ -50,6 +50,8 @@ class NewsitembotPipeline(object):
         # raise exceptions.DropItem
 
 
+"""
 class EMailPipeline(object):
     mailer = MailSender()
     mailer.send(to=["xyzhgwf@hotmail.com"], subject="This is a test", body="Test body")
+"""

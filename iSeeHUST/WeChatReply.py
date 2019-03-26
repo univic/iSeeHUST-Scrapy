@@ -3,6 +3,7 @@
 # Author : univic
 
 import re
+import bson
 import logging
 import datetime
 from iSeeHUST import DB
@@ -52,11 +53,11 @@ class TextReplyDispatch(object):
     def warp_gate_handle(self, entry_id):
 
         # 查找对应传送门编号
-        r = self.db.record_items_col.find({"serial_id": entry_id})
+        r = self.db.record_items_col.find({"serial_id": bson.Int64(entry_id)})
         if r.count() > 0:
             if r.count() == 1:
                 item = r[0]
-                return_str = f'[传送门{item["serial_id"]}]<a href={item["href"]}>{item["title"]}</a>'
+                return_str = f'[传送门{item["serial_id"]}]<a href="{item["href"]}">{item["title"]}</a>'
                 sLogger.info(f'WARP GATE {item["serial_id"]} FOUNDED')
             else:
                 sLogger.warning(f'REDUNDANT WARP GATE ENTRY {entry_id}')
@@ -68,7 +69,7 @@ class TextReplyDispatch(object):
         return return_str
 
     def get_recent_news_item(self):
-        query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=5)
+        query_date_limiter = datetime.datetime.now() - datetime.timedelta(days=1)
         query_date_limiter.replace(hour=0, minute=0, second=0, microsecond=0)
         r = self.db.record_items_col.find({"item_date": {"$gt": query_date_limiter}})
         return_str = ""
