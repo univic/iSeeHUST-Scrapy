@@ -6,7 +6,7 @@ from scrapy import cmdline
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from NewsItemBot.NewsItemBot import settings
-from NewsItemBot.NewsItemBot.spiders import husteco_spider
+from NewsItemBot.NewsItemBot.spiders import hustgs_spider
 from iSeeHUST import DB
 from conf.configs import CONFIGS
 
@@ -35,7 +35,7 @@ def run_crawler_aux():
     crawler_settings = Settings()
     crawler_settings.setmodule(settings)
     process = CrawlerProcess(settings=crawler_settings)
-    process.crawl(husteco_spider.HustecoSpider)
+    process.crawl(hustgs_spider.HustgsSpider)
     process.start()
 
 
