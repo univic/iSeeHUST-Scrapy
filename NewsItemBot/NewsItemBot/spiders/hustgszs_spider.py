@@ -18,13 +18,15 @@ class HUSTCMLoader(ItemLoader):
     item_date_out = TakeFirst()
 
 
-class HustgsSpider(scrapy.Spider):
+class HustgszsSpider(scrapy.Spider):
 
-    name = "hustgs"
+    name = "hustgszs"
 
     def start_requests(self):
         urls = [
-            'http://gs.hust.edu.cn/tzgg.htm',
+            'http://gszs.hust.edu.cn/zsxx/ggtz.htm',
+            'http://gszs.hust.edu.cn/zsxx/zszc.htm',
+            'http://gszs.hust.edu.cn/zsxx/ksdg.htm',
         ]
 
         for url in urls[:]:
@@ -34,25 +36,22 @@ class HustgsSpider(scrapy.Spider):
     # 解析函数，接收downloader的下载结果response并解析成item数据单元
     def parse(self, response):
 
-        # from scrapy.shell import inspect_response
-        # inspect_response(response, self)
-
         # 解析URL域名
         parsed_url = urlparse(response.request.url)
         domain = urlunparse([parsed_url.scheme, parsed_url.netloc, '', '', '', ''])
 
-        # 查找全部类名为listmb的列表元素其下的列表元素
-        nodes = response.xpath('//li[@class="serdv1"]')
+        # 查找全部类名为main_conRCb的div元素其下的列表元素
+        nodes = response.xpath('//div[@class="main_conRCb"]//li')
         logging.info(f">>>>>>>>{response.request.url} : {len(nodes)}")
 
-        # 查找类名为listma的div标签，解析栏目名称
-        section_name = response.xpath('//div[@class="position"]/h3/text()').extract()[0]
+        # 查找类名为main_titT main_titTa的div标签，解析栏目名称
+        section_name = response.xpath('//div[@class="main_titT main_titTa"]/a[@class="cur"]/text()').extract()[0]
 
         # 遍历列表元素，提取标题、超链接、日期等，使用item_loader将其封装进数据单元
         for node in nodes:
             item_loader = HUSTCMLoader(item=NewsitembotItem(), selector=node)
             item_loader.add_xpath('title', 'a/text()')
-            item_loader.add_value("tags", ["研究生院", section_name])
+            item_loader.add_value("tags", ["研招信息", section_name])
 
             # 将str类型日期转换为Datetime类型
             date_str = node.xpath('span/text()').extract()[0]
